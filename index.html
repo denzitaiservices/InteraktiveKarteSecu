@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <title>Interaktive Karte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div>
+        <h1>Interaktive Karte</h1>
+        <p>Klicke auf einen grünen Punkt, um die Punktnummer zu öffnen.</p>
+      </div>
+      <div class="counter"><span id="pointCount">14</span> Punkte</div>
+    </header>
+
+    <section class="map-card" aria-label="Interaktive Karte mit markierten Kreisverkehren">
+      <div class="map-stage" id="mapStage">
+        <img
+          class="map-image"
+          src="images/Karte1.jpg"
+          alt="Karte mit Strassennetz"
+          draggable="false"
+        >
+        <div id="markersLayer" class="markers-layer" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <p class="hint">Tipp: Die Positionen und Texte der Punkte kannst du später ganz einfach in <strong>script.js</strong> ändern.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
