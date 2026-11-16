@@ -19,7 +19,7 @@
     .tab i{width:12px;height:12px;border-radius:50%;background:var(--c)}
     .tab[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text)}
 
-    .layout{display:grid;grid-template-columns:1fr 370px;gap:16px;align-items:start}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px 290px;gap:16px;align-items:start}
     .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 28px rgba(0,0,0,.07)}
     .map-card{overflow:auto}
     .stage{position:relative;min-width:780px;aspect-ratio:2/1;background:#e9ebe6}
@@ -44,13 +44,19 @@
     .net.focus .flow.on{opacity:.95}
 
     .markers{position:absolute;inset:0}
-    .m{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;
-       background:#fff;border:4px solid var(--c);color:var(--text);font-weight:800;font-size:13px;cursor:pointer;z-index:3;
-       box-shadow:0 3px 10px rgba(0,0,0,.35);transition:transform .15s,opacity .25s}
+    .m{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;padding:0;
+       background:#fff;border:4px solid var(--c);color:var(--text);font:inherit;font-weight:800;font-size:13px;cursor:pointer;z-index:3;
+       box-shadow:0 3px 10px rgba(0,0,0,.35);transition:transform .15s,opacity .25s,background .2s,color .2s}
+    /* Info-Point-Abzeichen: zeigt, dass an der Station ein Reel hinterlegt ist */
+    .m[data-reel]::after{content:"▶";position:absolute;right:-9px;top:-9px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;
+       background:var(--text);color:#fff;font-size:8px;padding-left:1px;border:2px solid #fff}
+    .m.active{background:var(--c);color:#fff}
+    .m.active::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:3px solid var(--c);opacity:.7;animation:ping 1.6s ease-out infinite}
+    @keyframes ping{to{transform:scale(1.7);opacity:0}}
     .m:hover,.m:focus-visible{transform:translate(-50%,-50%) scale(1.15);outline:none}
-    .m.active{transform:translate(-50%,-50%) scale(1.3);z-index:5;box-shadow:0 0 0 6px rgba(250,204,21,.6),0 4px 14px rgba(0,0,0,.4)}
+    .m.active{transform:translate(-50%,-50%) scale(1.25);z-index:5;box-shadow:0 0 0 4px #fff,0 4px 14px rgba(0,0,0,.4)}
     .m.dim{opacity:.35}
-    .tag{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,22px);white-space:nowrap;background:#fff;color:var(--text);
+    .tag{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,25px);white-space:nowrap;background:#fff;color:var(--text);
          border-left:4px solid var(--c);font-size:11px;font-weight:700;padding:3px 7px;border-radius:4px;pointer-events:none;
          box-shadow:0 2px 6px rgba(0,0,0,.2);transition:opacity .25s;z-index:2}
     .tag.dim{opacity:0}
@@ -68,15 +74,55 @@
     .steps button.on{background:var(--bg);font-weight:700}
     .steps b{flex:none;width:24px;height:24px;border-radius:50%;border:3px solid var(--c);display:grid;place-items:center;font-size:.72rem}
     .detail{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
-    .detail h3{margin:0 0 2px;font-size:1.05rem}
-    .detail p.desc{margin:8px 0;line-height:1.5}
-    .detail ul{margin:0;padding-left:18px;line-height:1.6}
+    .detail p.desc{margin:12px 0;line-height:1.5}
+    /* Station visuell: Kopf mit Symbol, Fortschritt, Aufgaben als Kacheln */
+    .hero{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;
+          background:color-mix(in srgb,var(--c) 10%,#fff);border:1px solid color-mix(in srgb,var(--c) 25%,#fff)}
+    .hero .ico{flex:none;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:28px;background:#fff;
+          box-shadow:0 2px 8px rgba(0,0,0,.1);border-bottom:4px solid var(--c)}
+    .hero small{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c)}
+    .hero h3{margin:1px 0 5px;font-size:1.08rem;line-height:1.2}
+    .pill{display:inline-block;font-size:.74rem;font-weight:600;padding:2px 8px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--muted)}
+    .prog{display:flex;gap:4px;margin-top:10px}
+    .prog i{flex:1;height:5px;border-radius:3px;background:var(--border)}
+    .prog i.done{background:var(--c)}
+    .tiles{display:grid;gap:6px}
+    .tile{display:flex;gap:9px;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:10px;font-size:.88rem;line-height:1.3}
+    .tile b{flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:.75rem;color:#fff;background:var(--c)}
+    /* Info Point: Reel + Zusatzinfo */
+    .media{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .mcard{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card);
+           font:inherit;text-align:left;color:var(--text);text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
+    .mcard:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.1)}
+    .mcard .mi{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;background:var(--c)}
+    .mcard strong{font-size:.86rem}
+    .mcard span{font-size:.74rem;color:var(--muted);line-height:1.3}
+    .mcard.empty{border-style:dashed;cursor:default;background:none}
+    .mcard.empty:hover{transform:none;box-shadow:none}
+    .mcard.empty .mi{background:#d1d5db}
+    .infobox{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.86rem;line-height:1.45}
+    .infobox a{color:inherit;font-weight:700}
+    dialog.reel{border:0;padding:0;border-radius:18px;background:#000;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    dialog.reel::backdrop{background:rgba(17,24,39,.7)}
+    dialog.reel video{display:block;height:min(80vh,640px);aspect-ratio:9/16;background:#000}
+    dialog.reel button{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:16px;cursor:pointer}
+    /* Knigge / Tipps & Tricks */
+    .tips{padding:18px;position:sticky;top:16px}
+    .tips h2{margin:0;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+    .tips .for{margin:3px 0 12px;font-size:.82rem;color:var(--muted)}
+    .tip{display:flex;gap:10px;padding:11px;border-radius:12px;margin-top:8px;font-size:.87rem;line-height:1.4;background:var(--tb);border-left:4px solid var(--tc)}
+    .tip b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;color:#fff;background:var(--tc)}
+    .tip small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--tc)}
+    .tip.do{--tc:#15803d;--tb:#f0fdf4}.tip.dont{--tc:#b91c1c;--tb:#fef2f2}.tip.trick{--tc:#b45309;--tb:#fffbeb}
     .in{font-size:.8rem;color:var(--muted);margin-top:10px}
     .nav{display:flex;gap:8px;margin-top:16px}
     .nav button{flex:1;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--card);font:inherit;font-weight:600;cursor:pointer;color:var(--text)}
     .nav button:disabled{opacity:.4;cursor:default}
     .hint{color:var(--muted);font-size:.85rem;margin:12px 2px 0}
-    @media(max-width:1000px){.layout{grid-template-columns:1fr}.panel{position:static}}
+    @media(max-width:1350px){.layout{grid-template-columns:minmax(0,1fr) 360px}.tips{grid-column:1/-1;position:static}
+      .tips .list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tips .tip{margin-top:0}}
+    @media(max-width:1000px){.layout{grid-template-columns:1fr}.panel{position:static}.tips .list{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){.m.active::before,.flow{animation:none}}
     @media(max-width:600px){body{padding:12px}}
   </style>
 </head>
@@ -107,7 +153,9 @@
       </div>
     </section>
     <aside class="card panel" id="panel" aria-live="polite"></aside>
+    <aside class="card tips" id="tips" aria-live="polite"></aside>
   </div>
+  <dialog class="reel" id="reelDlg"><button type="button" id="reelClose" aria-label="Schliessen">✕</button><video id="reelVid" controls playsinline></video></dialog>
   <p class="hint">Farbige Spuren = Prozesse · graue Strassen = Abzweigungen und Querverbindungen · Stationen mit mehreren Prozessen sind Kreuzungen.</p>
 </main>
 
@@ -129,6 +177,29 @@ const stations = {
   13:{x:95.5, y:49.61,title:'Montage & Inbetriebnahme', area:'Technik', desc:'Das System wird beim Kunden installiert.', tasks:['Montage','Inbetriebnahme','Abnahme mit Kunde']},
   14:{x:85.69,y:83.59,title:'Endkunde', area:'Neubau / Modernisierung', desc:'Das Produkt ist im Einsatz.', tasks:['Nutzung im Betrieb','Feedback','Rückspiel-Möglichkeiten (Personen, OS etc.) aufzeigen']}
 };
+
+// Darstellung je Station:
+//   icon  = Symbol im Stationskopf
+//   reel  = Pfad/URL zu einem Hochformat-Video (z.B. 'reels/01.mp4'); leer = "folgt"
+//   info  = Zusatztext für den Info Point,  link = optionaler Link (Intranet, PDF ...)
+//   do / dont / tipp = Knigge-Karte rechts  (ENTWURF – bitte fachlich prüfen und anpassen)
+const extras = {
+  1:{icon:'✅', reel:'', info:'', link:'', do:'Entscheid schriftlich festhalten und allen Beteiligten mitteilen.', dont:'Ohne geklärtes Budget und Termine starten.', tipp:'Pro Bereich eine Ansprechperson benennen.'},
+  2:{icon:'🧭', reel:'', info:'', link:'', do:'Anforderungen früh mit Vertrieb und Service abstimmen.', dont:'Spezifikation nachträglich ändern, ohne zu informieren.', tipp:'Roadmap an einem Ort aktuell halten.'},
+  3:{icon:'🛠️', reel:'', info:'', link:'', do:'Dokumentation parallel zur Entwicklung schreiben.', dont:'Änderungen ohne Rückmeldung ans PM umsetzen.', tipp:'Offene Punkte für alle sichtbar führen.'},
+  4:{icon:'🧪', reel:'', info:'', link:'', do:'Pilotanlagen unter realen Bedingungen testen.', dont:'Unter Zeitdruck ohne Protokoll freigeben.', tipp:'Testergebnisse für den Support aufbereiten.'},
+  5:{icon:'🤝', reel:'', info:'', link:'', do:'Erste Fälle sauber dokumentieren.', dont:'Wissen nur mündlich weitergeben.', tipp:'Häufige Fragen als FAQ sammeln.'},
+  6:{icon:'📊', reel:'', info:'', link:'', do:'Segmente und Preise mit dem Vertrieb spiegeln.', dont:'Preise ohne Blick auf den Wettbewerb festlegen.', tipp:'Annahmen nach dem Launch überprüfen.'},
+  7:{icon:'🚀', reel:'', info:'', link:'', do:'Launch-Termin mit Training und Service abstimmen.', dont:'Promotion starten, bevor die Unterlagen bereit sind.', tipp:'Checkliste für den Launch-Tag führen.'},
+  8:{icon:'📣', reel:'', info:'', link:'', do:'Zuerst intern informieren, dann extern.', dont:'Je Kanal unterschiedliche Botschaften senden.', tipp:'Ein kurzes Reel erklärt oft mehr als ein langer Text.'},
+  9:{icon:'🎓', reel:'', info:'', link:'', do:'Schulung vor dem Verkaufsstart durchführen.', dont:'Technik und Vertrieb mit denselben Inhalten schulen.', tipp:'Schulungsunterlagen zentral ablegen.'},
+  10:{icon:'🔧', reel:'', info:'', link:'', do:'Ersatzteile vor der ersten Anlage an Lager nehmen.', dont:'Hotline ohne Produktschulung starten.', tipp:'Störungen strukturiert ans PM zurückmelden.'},
+  11:{icon:'💼', reel:'', info:'', link:'', do:'Kundenbedürfnis klären, bevor offeriert wird.', dont:'Funktionen versprechen, die nicht freigegeben sind.', tipp:'Referenzanlagen aktiv nutzen.'},
+  12:{icon:'📋', reel:'', info:'', link:'', do:'Machbarkeit prüfen, bevor zugesagt wird.', dont:'Projekt ohne saubere Übergabe vom Vertrieb starten.', tipp:'Budget und Termine laufend kontrollieren.'},
+  13:{icon:'🏗️', reel:'', info:'', link:'', do:'Abnahme gemeinsam mit dem Kunden protokollieren.', dont:'Offene Mängel ohne Termin stehen lassen.', tipp:'Erfahrungen von der Baustelle zurückmelden.'},
+  14:{icon:'🏢', reel:'', info:'', link:'', do:'Feedback aktiv einholen.', dont:'Rückmeldungen unbeantwortet lassen.', tipp:'Dem Kunden zeigen, wo er Rückmeldungen platzieren kann.'}
+};
+Object.entries(extras).forEach(([id, e]) => Object.assign(stations[id], e));
 
 // Prozesse = richtige Wege. Zahlen = Stationen, [x,y] = Kurvenpunkte dazwischen.
 const processes = [
@@ -213,6 +284,7 @@ Object.entries(stations).forEach(([id, s]) => {
   m.type = 'button'; m.className = 'm'; m.textContent = id;
   m.style.cssText = `--x:${s.x}%;--y:${s.y}%;--c:${first.color}`;
   m.setAttribute('aria-label', s.title);
+  if (s.reel) m.dataset.reel = '';
   m.onclick = () => pickStation(+id);
   const t = document.createElement('div');
   t.className = 'tag'; t.textContent = s.title;
@@ -292,7 +364,21 @@ function showAll(){
   $('panel').innerHTML = `<h2>Alle Prozesse</h2><p class="muted">Die Wirkkette besteht aus mehreren Prozessen, die sich an Kreuzungen treffen.</p>
     <ul class="steps">${processes.map((p, k) => `<li><button data-p="${k}" style="--c:${p.color}"><b>${p.steps.length}</b>${p.name}</button></li>`).join('')}</ul>`;
   $('panel').querySelectorAll('[data-p]').forEach(b => b.onclick = () => selectProcess(processes[+b.dataset.p], 0));
+  $('tips').innerHTML = `<h2>📖 Knigge</h2><p class="for">Tipps &amp; Tricks</p>
+    <p class="muted">Station wählen – hier erscheinen die passenden Dos, Don'ts und Tipps.</p>`;
 }
+
+const tipRow = (cls, sym, label, text) => text ? `<div class="tip ${cls}"><b>${sym}</b><div><small>${label}</small>${text}</div></div>` : '';
+function renderTips(id, s){
+  $('tips').innerHTML = `<h2>📖 Knigge</h2><p class="for">Tipps &amp; Tricks · ${id}. ${s.title}</p>
+    <div class="list">${tipRow('do','✓','So gelingt es',s.do)}${tipRow('dont','✕','Besser nicht',s.dont)}${tipRow('trick','★','Tipp',s.tipp)}</div>`;
+}
+function openReel(src){
+  const v = $('reelVid'); v.src = src; $('reelDlg').showModal(); v.play().catch(() => {});
+}
+$('reelClose').onclick = () => $('reelDlg').close();
+$('reelDlg').addEventListener('close', () => { $('reelVid').pause(); $('reelVid').removeAttribute('src'); });
+$('reelDlg').addEventListener('click', e => { if (e.target === $('reelDlg')) $('reelDlg').close(); });
 
 function pickStation(id){
   if (cur && cur.steps.includes(id)) return selectProcess(cur, cur.steps.indexOf(id));
@@ -308,9 +394,21 @@ function renderPanel(){
     <h2>${p.name}</h2><p class="muted">${p.desc}</p>
     <ol class="steps">${p.steps.map((sid, k) => `<li><button data-k="${k}" class="${k === step ? 'on' : ''}" style="--c:${p.color}"><b>${sid}</b>${stations[sid].title}</button></li>`).join('')}</ol>
     <div class="detail">
-      <h3>${id}. ${s.title}</h3><p class="muted">${s.area}</p>
+      <div class="hero" style="--c:${p.color}">
+        <div class="ico" aria-hidden="true">${s.icon || '📍'}</div>
+        <div style="flex:1;min-width:0"><small>Station ${id} · Schritt ${step + 1} von ${p.steps.length}</small>
+          <h3>${s.title}</h3><span class="pill">${s.area}</span>
+          <div class="prog">${p.steps.map((_, k) => `<i class="${k <= step ? 'done' : ''}"></i>`).join('')}</div></div>
+      </div>
       <p class="desc">${s.desc}</p>
-      <ul>${s.tasks.map(t => `<li>${t}</li>`).join('')}</ul>
+      <div class="tiles" style="--c:${p.color}">${s.tasks.map(t => `<div class="tile"><b>✓</b>${t}</div>`).join('')}</div>
+      <div class="media" style="--c:${p.color}">
+        ${s.reel ? `<button type="button" class="mcard" id="reelBtn"><div class="mi">▶</div><strong>Reel ansehen</strong><span>Kurzvideo zur Station</span></button>`
+                 : `<div class="mcard empty"><div class="mi">▶</div><strong>Reel</strong><span>folgt</span></div>`}
+        ${s.info || s.link ? `<button type="button" class="mcard" id="infoBtn" aria-expanded="false"><div class="mi">i</div><strong>Info Point</strong><span>Mehr zur Station</span></button>`
+                 : `<div class="mcard empty"><div class="mi">i</div><strong>Info Point</strong><span>folgt</span></div>`}
+      </div>
+      <div class="infobox" id="infoBox" hidden>${s.info || ''}${s.link ? ` <a href="${s.link}" target="_blank" rel="noopener">Mehr erfahren →</a>` : ''}</div>
       ${others.length ? `<p class="in">Kreuzung mit: ${others.map(q => q.name).join(', ')}</p>` : ''}
     </div>
     <div class="nav"><button id="prev" type="button" ${step === 0 ? 'disabled' : ''}>← Zurück</button>
@@ -318,6 +416,9 @@ function renderPanel(){
   $('panel').querySelectorAll('[data-k]').forEach(b => b.onclick = () => selectProcess(p, +b.dataset.k));
   $('prev').onclick = () => selectProcess(p, step - 1);
   $('next').onclick = () => selectProcess(p, step + 1);
+  if ($('reelBtn')) $('reelBtn').onclick = () => openReel(s.reel);
+  if ($('infoBtn')) $('infoBtn').onclick = () => { const b = $('infoBox'); b.hidden = !b.hidden; $('infoBtn').setAttribute('aria-expanded', !b.hidden); };
+  renderTips(id, s);
 }
 
 document.addEventListener('keydown', e => {
