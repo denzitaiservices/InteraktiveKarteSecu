@@ -87,7 +87,7 @@
     .prog i{flex:1;height:5px;border-radius:3px;background:var(--border)}
     .prog i.done{background:var(--c)}
     .tiles{display:grid;gap:6px}
-    .tile{display:flex;gap:9px;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:10px;font-size:.88rem;line-height:1.3}
+    .tile{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;font-size:.88rem;line-height:1.3}
     .tile b{flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:.75rem;color:#fff;background:var(--c)}
     /* Info Point: Reel + Zusatzinfo */
     .media{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -113,14 +113,17 @@
     .tip{display:flex;gap:10px;padding:11px;border-radius:12px;margin-top:8px;font-size:.87rem;line-height:1.4;background:var(--tb);border-left:4px solid var(--tc)}
     .tip b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;color:#fff;background:var(--tc)}
     .tip small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--tc)}
-    .tip.do{--tc:#15803d;--tb:#f0fdf4}.tip.dont{--tc:#b91c1c;--tb:#fef2f2}.tip.trick{--tc:#b45309;--tb:#fffbeb}
+    .tip.do{--tc:#1d4ed8;--tb:#eff6ff}.tip.trick{--tc:#b45309;--tb:#fffbeb}
+    .tip ul{margin:2px 0 0;padding-left:16px}
+    .tipgroup+.tipgroup{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+    .mit{display:inline-block;font-size:.8rem;font-weight:800;padding:4px 10px;border-radius:999px;background:#dbeafe;color:#1e3a8a}
     .in{font-size:.8rem;color:var(--muted);margin-top:10px}
     .nav{display:flex;gap:8px;margin-top:16px}
     .nav button{flex:1;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--card);font:inherit;font-weight:600;cursor:pointer;color:var(--text)}
     .nav button:disabled{opacity:.4;cursor:default}
     .hint{color:var(--muted);font-size:.85rem;margin:12px 2px 0}
     @media(max-width:1350px){.layout{grid-template-columns:minmax(0,1fr) 360px}.tips{grid-column:1/-1;position:static}
-      .tips .list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tips .tip{margin-top:0}}
+      .tips .list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.tipgroup+.tipgroup{margin-top:0;padding-top:0;border-top:0}}
     @media(max-width:1000px){.layout{grid-template-columns:1fr}.panel{position:static}.tips .list{grid-template-columns:1fr}}
     @media(prefers-reduced-motion:reduce){.m.active::before,.flow{animation:none}}
     @media(max-width:600px){body{padding:12px}}
@@ -163,43 +166,49 @@
 /* ===== Daten – hier anpassen ===== */
 const stations = {
   1:{x:9.33, y:19.63, title:'Management-Entscheid', area:'Geschäftsleitung', desc:'Freigabe der Produkteinführung für Neubau und Modernisierung.', tasks:['Business Case prüfen','Budget und Termine freigeben','Verantwortliche bestimmen']},
-  2:{x:24.46,y:39.94, title:'PM – Produktmanagement', area:'Produktmanagement', desc:'Definiert Anforderungen, Positionierung und Lebenszyklus.', tasks:['Markt- und Kundenanforderungen','Produktspezifikation','Roadmap & Lifecycle']},
-  3:{x:3.5,  y:62.5,  title:'Produktentwicklung', area:'Entwicklung (PE)', desc:'Software und Hardware werden entwickelt und dokumentiert.', tasks:['Software','Hardware','Technische Dokumentation']},
-  4:{x:17.53,y:71.97, title:'Testing PMS', area:'Entwicklung / Qualität', desc:'Prüfung und Freigabe vor dem Marktstart.', tasks:['System- und Integrationstests','Pilotanlagen','Freigabeprotokoll']},
-  5:{x:35.69,y:83.59, title:'PE/PM Support', area:'Produktmanagement Support', desc:'Technische Begleitung während der Einführung.', tasks:['Supportprozesse aufsetzen','Know-how an Vertrieb','Erste Fälle begleiten']},
+  2:{x:24.46,y:39.94, title:'PM – Produktmanagement', area:'Produktmanagement', desc:'Prozess Produktbereitstellung: definiert die Anforderungen ans Produkt.', tasks:['Anforderungen ans Produkt: Qualität, Preis, Funktionen','Spezifizierung: technologische Möglichkeiten, Lastenheft','Strategie: Marktanalyse, Marktbedürfnisse und neue Technologien erkennen','Roadmap & Lifecycle']},
+  3:{x:3.5,  y:62.5,  title:'Produktentwicklung', area:'Entwicklung (PE)', desc:'Software und Hardware werden entwickelt und dokumentiert.', tasks:['Spezifizierung: technologische Möglichkeiten, Pflichtenheft','Umsetzung des Produkts: Software und Hardware','Agile Lean Product Development & Produktpflege']},
+  4:{x:17.53,y:71.97, title:'Testing PMS', area:'Entwicklung / Qualität', desc:'Verifikation und Validierung bis zur Produktfreigabe.', tasks:['Verifikation: Testing EMS','Validierung: Fachstelle (Teil von PM), Pilotanlagen','M4 – Produktfreigabe']},
+  5:{x:35.69,y:83.59, title:'PE/PM Support', area:'Produktmanagement Support', desc:'PS/PM Produktmanagement Support begleitet technisch und am Markt.', tasks:['Second Level Support (Tickets)','PM Markt','PS-PM Technik']},
   6:{x:46.97,y:49.61, title:'Prozess Marktbearbeitung', area:'Produktmanagement / Marketing', desc:'Zielmärkte, Segmente und Preise werden festgelegt.', tasks:['Marktsegmente','Preisgestaltung','Wettbewerbsanalyse']},
-  7:{x:34.13,y:19.14, title:'Prozess Markteinführung', area:'Produktmanagement / Marketing', desc:'Der Launch wird geplant und Promotionen umgesetzt.', tasks:['Launch-Plan','Umsetzung Promotionen','Verkaufsunterlagen']},
-  8:{x:59.33,y:19.63, title:'MK – Marketing & Kommunikation', area:'Marketing', desc:'Das Produkt wird intern und extern kommuniziert.', tasks:['Produktseite Web','Kommunikation an Partner','Messen, Social Media, Presse']},
-  9:{x:51.37,y:66.70, title:'Trainingsabteilung', area:'HR / Training', desc:'Mitarbeitende und Partner werden geschult.', tasks:['Schulung Vertrieb','Schulung Technik & Montage','Zertifizierungen']},
-  10:{x:67.53,y:71.97,title:'Services', area:'Service', desc:'Wartung, Ersatzteile und Hotline sind bereit.', tasks:['Ersatzteillogistik','Serviceverträge','Hotline & Störungsdienst']},
-  11:{x:74.46,y:39.94,title:'VCH – Vertrieb Schweiz', area:'Vertrieb', desc:'Der Vertrieb bringt das Produkt zum Kunden.', tasks:['Kunden ansprechen','Offerten erstellen','Projekte akquirieren']},
-  12:{x:84.13,y:19.14,title:'Auftrag & Projektleitung', area:'Projektleitung', desc:'Aus der Anfrage wird ein Projekt.', tasks:['Anfrage prüfen','Budget und Qualität sichern','Projektplanung']},
-  13:{x:95.5, y:49.61,title:'Montage & Inbetriebnahme', area:'Technik', desc:'Das System wird beim Kunden installiert.', tasks:['Montage','Inbetriebnahme','Abnahme mit Kunde']},
-  14:{x:85.69,y:83.59,title:'Endkunde', area:'Neubau / Modernisierung', desc:'Das Produkt ist im Einsatz.', tasks:['Nutzung im Betrieb','Feedback','Rückspiel-Möglichkeiten (Personen, OS etc.) aufzeigen']}
+  7:{x:34.13,y:19.14, title:'Prozess Markteinführung', area:'Produktmanagement / Marketing', desc:'Der Launch wird geplant und bis zur Lieferbereitschaft umgesetzt.', tasks:['Markteinführungsplan','Zulassungen Länder','Technische Produktdokumentation','Produktstammdaten erfassen','Verkaufsfreigabe (M4M)','Umsetzung Kundenservice, Logistik und Training','Lieferbereitschaft (M5M)']},
+  8:{x:59.33,y:19.63, title:'MK – Marketing & Kommunikation', area:'Marketing', desc:'Verkaufsunterstützende Kommunikation – intern und extern.', tasks:['Umsetzung Marketingmittel','Produktseiten Web','Sortimentspräsentationen für Endkunden (Lektorat & Übersetzungen)','Webnews, Social Media, Printmedien','Werbung, z.B. in Printmedien, Google']},
+  9:{x:51.37,y:66.70, title:'Trainingsabteilung', area:'HR / Training', desc:'Mitarbeitende und Partner werden geschult.', tasks:['Trainingsdurchführung','Unterstützung pädagogisches Konzept und Umsetzung','Schulung Vertrieb, Technik & Montage']},
+  10:{x:67.53,y:71.97,title:'Services', area:'Service', desc:'Services und Logistik sind für das Produkt bereit.', tasks:['Logistik: richtige Zeit, Qualität, Ort und Menge – gemeinsam mit der Abteilung Einkauf','PowerUser-Workshop','Hotline & Störungsdienst']},
+  11:{x:74.46,y:39.94,title:'VCH – Vertrieb Schweiz', area:'Vertrieb', desc:'Der Vertrieb bringt das Produkt zum Kunden.', tasks:['<strong>Business Development:</strong> Marktanalyse, Marktbedürfnisse und neue Technologien erkennen','<strong>Produktplanung:</strong> konkrete Anforderungen einbringen','Klare Anforderungen und Ziele des Projekts kommunizieren','Zeitnahe Entscheidungen und Feedback geben','Notwendige Informationen und Ansprechpartner bereitstellen','Geschäftsstellen, Techniker und Power User einbinden']},
+  12:{x:84.13,y:19.14,title:'Auftrag & Projektleitung', area:'Projektleitung', desc:'Aus der Anfrage wird ein Projekt – Projektleiter und Backoffice arbeiten Hand in Hand.', tasks:['<strong>Projektleiter:</strong> klare und vollständige Anforderungen bereitstellen','Termingerechte Entscheidungen und Freigaben erteilen','Verfügbarkeit der relevanten Ansprechpartner sicherstellen','<strong>Backoffice:</strong> vollständige und korrekte Kundendaten bereitstellen','Bestellungen, Verträge und Dokumente rechtzeitig bearbeiten','Administrative Prozesse und Freigaben sicherstellen']},
+  13:{x:95.5, y:49.61,title:'Montage & Inbetriebnahme', area:'Technik', desc:'Das System wird beim Kunden installiert.', tasks:['Montage, Inbetriebnahme und Abnahme mit dem Kunden','<strong>Braucht:</strong> vollständige und korrekte technische Informationen','<strong>Braucht:</strong> Zugang zu Anlagen, Räumlichkeiten oder Systemen','<strong>Braucht:</strong> Verfügbarkeit für Rückfragen und Tests']},
+  14:{x:85.69,y:83.59,title:'Endkunde', area:'Neubau / Modernisierung', desc:'Das Produkt ist im Einsatz – der Kunde hat mehrere Rollen.', tasks:['<strong>Auftraggeber:</strong> Anforderungen, Budget, Qualität','<strong>Rechnungskunde:</strong> Kosten im Budgetrahmen, transparente Rechnungsstellung, termingerechte Projektabwicklung','<strong>Technischer Kunde:</strong> funktionierende, zuverlässige Lösung, einfache Integration, hohe Sicherheit und Verfügbarkeit','<strong>Endkunde / Nutzer:</strong> einfache Bedienung, zuverlässige Funktion, schnelle Unterstützung bei Problemen','<strong>Key Accounts (über 300 MA):</strong> Produktplanung, konkrete Anforderungen','Rückspiel-Möglichkeiten (Personen, GS etc.) aufzeigen']}
 };
 
 // Darstellung je Station:
 //   icon  = Symbol im Stationskopf
 //   reel  = Pfad/URL zu einem Hochformat-Video (z.B. 'reels/01.mp4'); leer = "folgt"
 //   info  = Zusatztext für den Info Point,  link = optionaler Link (Intranet, PDF ...)
-//   do / dont / tipp = Knigge-Karte rechts  (ENTWURF – bitte fachlich prüfen und anpassen)
 const extras = {
-  1:{icon:'✅', reel:'', info:'', link:'', do:'Entscheid schriftlich festhalten und allen Beteiligten mitteilen.', dont:'Ohne geklärtes Budget und Termine starten.', tipp:'Pro Bereich eine Ansprechperson benennen.'},
-  2:{icon:'🧭', reel:'', info:'', link:'', do:'Anforderungen früh mit Vertrieb und Service abstimmen.', dont:'Spezifikation nachträglich ändern, ohne zu informieren.', tipp:'Roadmap an einem Ort aktuell halten.'},
-  3:{icon:'🛠️', reel:'', info:'', link:'', do:'Dokumentation parallel zur Entwicklung schreiben.', dont:'Änderungen ohne Rückmeldung ans PM umsetzen.', tipp:'Offene Punkte für alle sichtbar führen.'},
-  4:{icon:'🧪', reel:'', info:'', link:'', do:'Pilotanlagen unter realen Bedingungen testen.', dont:'Unter Zeitdruck ohne Protokoll freigeben.', tipp:'Testergebnisse für den Support aufbereiten.'},
-  5:{icon:'🤝', reel:'', info:'', link:'', do:'Erste Fälle sauber dokumentieren.', dont:'Wissen nur mündlich weitergeben.', tipp:'Häufige Fragen als FAQ sammeln.'},
-  6:{icon:'📊', reel:'', info:'', link:'', do:'Segmente und Preise mit dem Vertrieb spiegeln.', dont:'Preise ohne Blick auf den Wettbewerb festlegen.', tipp:'Annahmen nach dem Launch überprüfen.'},
-  7:{icon:'🚀', reel:'', info:'', link:'', do:'Launch-Termin mit Training und Service abstimmen.', dont:'Promotion starten, bevor die Unterlagen bereit sind.', tipp:'Checkliste für den Launch-Tag führen.'},
-  8:{icon:'📣', reel:'', info:'', link:'', do:'Zuerst intern informieren, dann extern.', dont:'Je Kanal unterschiedliche Botschaften senden.', tipp:'Ein kurzes Reel erklärt oft mehr als ein langer Text.'},
-  9:{icon:'🎓', reel:'', info:'', link:'', do:'Schulung vor dem Verkaufsstart durchführen.', dont:'Technik und Vertrieb mit denselben Inhalten schulen.', tipp:'Schulungsunterlagen zentral ablegen.'},
-  10:{icon:'🔧', reel:'', info:'', link:'', do:'Ersatzteile vor der ersten Anlage an Lager nehmen.', dont:'Hotline ohne Produktschulung starten.', tipp:'Störungen strukturiert ans PM zurückmelden.'},
-  11:{icon:'💼', reel:'', info:'', link:'', do:'Kundenbedürfnis klären, bevor offeriert wird.', dont:'Funktionen versprechen, die nicht freigegeben sind.', tipp:'Referenzanlagen aktiv nutzen.'},
-  12:{icon:'📋', reel:'', info:'', link:'', do:'Machbarkeit prüfen, bevor zugesagt wird.', dont:'Projekt ohne saubere Übergabe vom Vertrieb starten.', tipp:'Budget und Termine laufend kontrollieren.'},
-  13:{icon:'🏗️', reel:'', info:'', link:'', do:'Abnahme gemeinsam mit dem Kunden protokollieren.', dont:'Offene Mängel ohne Termin stehen lassen.', tipp:'Erfahrungen von der Baustelle zurückmelden.'},
-  14:{icon:'🏢', reel:'', info:'', link:'', do:'Feedback aktiv einholen.', dont:'Rückmeldungen unbeantwortet lassen.', tipp:'Dem Kunden zeigen, wo er Rückmeldungen platzieren kann.'}
+  1:{icon:'✅', reel:'', info:'', link:''},
+  2:{icon:'🧭', reel:'', info:'', link:''},
+  3:{icon:'🛠️', reel:'', info:'', link:''},
+  4:{icon:'🧪', reel:'', info:'', link:''},
+  5:{icon:'🤝', reel:'', info:'', link:''},
+  6:{icon:'📊', reel:'', info:'', link:''},
+  7:{icon:'🚀', reel:'', info:'', link:''},
+  8:{icon:'📣', reel:'', info:'', link:''},
+  9:{icon:'🎓', reel:'', info:'', link:''},
+  10:{icon:'🔧', reel:'', info:'', link:''},
+  11:{icon:'💼', reel:'', info:'', link:''},
+  12:{icon:'📋', reel:'', info:'', link:''},
+  13:{icon:'🏗️', reel:'', info:'', link:''},
+  14:{icon:'🏢', reel:'', info:'', link:''}
 };
 Object.entries(extras).forEach(([id, e]) => Object.assign(stations[id], e));
+
+// Knigge / Tipps & Tricks = blaue Felder vom Whiteboard (Schnittstellen zwischen zwei Rollen).
+//   mit = wer mit wem,  info = was ausgetauscht wird,  schwierig = typische Stolpersteine
+const tipAV = {mit:'Auftraggeber ↔ Vertrieb', info:['Projektziele und Anforderungen','Budget und Kosten','Termine und Meilensteine'], schwierig:['Unklare Anforderungen','Verzögerte Entscheidungen','Feedbackschleifen fehlen oder dauern zu lange']};
+const tipVP = {mit:'Vertrieb ↔ Projektleiter', info:['Anforderungen des Kunden','Termine und Meilensteine','Budget und Projektumfang'], schwierig:['Unvollständige Informationsübergabe','Unrealistische Termin- oder Kostenerwartungen']};
+const tipBP = {mit:'Backoffice ↔ Projektleiter', info:['Budget und Kosten','Rechnungen und Zahlungsstatus','Projektstatus und Termine'], schwierig:['Diskussionen über Mehrkosten','Verspätete Zahlungen oder Freigaben']};
+const tips = { 11:[tipAV, tipVP], 12:[tipVP, tipBP], 14:[tipAV] };
 
 // Prozesse = richtige Wege. Zahlen = Stationen, [x,y] = Kurvenpunkte dazwischen.
 const processes = [
@@ -365,13 +374,16 @@ function showAll(){
     <ul class="steps">${processes.map((p, k) => `<li><button data-p="${k}" style="--c:${p.color}"><b>${p.steps.length}</b>${p.name}</button></li>`).join('')}</ul>`;
   $('panel').querySelectorAll('[data-p]').forEach(b => b.onclick = () => selectProcess(processes[+b.dataset.p], 0));
   $('tips').innerHTML = `<h2>📖 Knigge</h2><p class="for">Tipps &amp; Tricks</p>
-    <p class="muted">Station wählen – hier erscheinen die passenden Dos, Don'ts und Tipps.</p>`;
+    <p class="muted">Station wählen – hier erscheinen die Tipps zu den Schnittstellen.</p>`;
 }
 
-const tipRow = (cls, sym, label, text) => text ? `<div class="tip ${cls}"><b>${sym}</b><div><small>${label}</small>${text}</div></div>` : '';
+const tipList = (cls, sym, label, items) => `<div class="tip ${cls}"><b>${sym}</b><div><small>${label}</small><ul>${items.map(t => `<li>${t}</li>`).join('')}</ul></div></div>`;
 function renderTips(id, s){
-  $('tips').innerHTML = `<h2>📖 Knigge</h2><p class="for">Tipps &amp; Tricks · ${id}. ${s.title}</p>
-    <div class="list">${tipRow('do','✓','So gelingt es',s.do)}${tipRow('dont','✕','Besser nicht',s.dont)}${tipRow('trick','★','Tipp',s.tipp)}</div>`;
+  const list = tips[id] || [];
+  $('tips').innerHTML = `<h2>📖 Knigge</h2><p class="for">Tipps &amp; Tricks · ${id}. ${s.title}</p>` +
+    (list.length ? `<div class="list">${list.map(t => `<div class="tipgroup"><div class="mit">${t.mit}</div>
+        ${tipList('do','i','Diese Informationen fliessen',t.info)}${tipList('trick','!','Darauf achten',t.schwierig)}</div>`).join('')}</div>`
+      : `<p class="muted">Für diese Station sind noch keine Tipps erfasst.</p>`);
 }
 function openReel(src){
   const v = $('reelVid'); v.src = src; $('reelDlg').showModal(); v.play().catch(() => {});
@@ -401,7 +413,7 @@ function renderPanel(){
           <div class="prog">${p.steps.map((_, k) => `<i class="${k <= step ? 'done' : ''}"></i>`).join('')}</div></div>
       </div>
       <p class="desc">${s.desc}</p>
-      <div class="tiles" style="--c:${p.color}">${s.tasks.map(t => `<div class="tile"><b>✓</b>${t}</div>`).join('')}</div>
+      <div class="tiles" style="--c:${p.color}">${s.tasks.map(t => `<div class="tile"><b>✓</b><span>${t}</span></div>`).join('')}</div>
       <div class="media" style="--c:${p.color}">
         ${s.reel ? `<button type="button" class="mcard" id="reelBtn"><div class="mi">▶</div><strong>Reel ansehen</strong><span>Kurzvideo zur Station</span></button>`
                  : `<div class="mcard empty"><div class="mi">▶</div><strong>Reel</strong><span>folgt</span></div>`}
